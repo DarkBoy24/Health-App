@@ -1,23 +1,20 @@
 import CryptoJS from 'crypto-js';
-import * as Keychain from 'react-native-keychain';
+import * as SecureStore from 'expo-secure-store';
 
 const ENCRYPTION_KEY = 'health_app_encryption_key';
 
 // Generate encryption key (do this once per user)
 export const generateEncryptionKey = async (): Promise<string> => {
   const key = CryptoJS.lib.WordArray.random(256 / 8).toString();
-  await Keychain.setGenericPassword(ENCRYPTION_KEY, key);
+  await SecureStore.setItemAsync(ENCRYPTION_KEY, key);
   return key;
 };
 
 // Get stored encryption key
 export const getEncryptionKey = async (): Promise<string | null> => {
   try {
-    const credentials = await Keychain.getGenericPassword();
-    if (credentials) {
-      return credentials.password;
-    }
-    return null;
+    const key = await SecureStore.getItemAsync(ENCRYPTION_KEY);
+    return key;
   } catch (error) {
     console.error('Failed to get encryption key:', error);
     return null;
@@ -54,3 +51,4 @@ export const decryptObject = async <T>(encrypted: string): Promise<T> => {
   const jsonString = decryptData(encrypted, key);
   return JSON.parse(jsonString) as T;
 };
+

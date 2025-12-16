@@ -10,6 +10,8 @@ import {
   limit,
   Timestamp,
   Firestore,
+  QueryDocumentSnapshot,
+  DocumentData,
 } from 'firebase/firestore';
 import { db } from '@config/firebase';
 import { HealthLog, UserProfile } from '@models/types';
@@ -109,8 +111,8 @@ class HealthService {
       const q = query(logsRef, orderBy('date', 'desc'), limit(limitCount));
       const querySnapshot = await getDocs(q);
 
-      return querySnapshot.docs.map((doc) => {
-        const data = doc.data();
+      return querySnapshot.docs.map((docSnapshot: QueryDocumentSnapshot<DocumentData>) => {
+        const data = docSnapshot.data();
         return {
           ...data,
           createdAt: data.createdAt.toDate(),
@@ -139,8 +141,8 @@ class HealthService {
       );
       const querySnapshot = await getDocs(q);
 
-      return querySnapshot.docs.map((doc) => {
-        const data = doc.data();
+      return querySnapshot.docs.map((docSnapshot: QueryDocumentSnapshot<DocumentData>) => {
+        const data = docSnapshot.data();
         return {
           ...data,
           createdAt: data.createdAt.toDate(),

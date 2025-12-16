@@ -4,7 +4,7 @@ import {
   signOut,
   sendPasswordResetEmail,
   User,
-  Auth Auth,
+  Auth,
 } from 'firebase/auth';
 import { doc, setDoc, getDoc, Firestore } from 'firebase/firestore';
 import { auth, db } from '@config/firebase';
